@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            rsel-exprparser-basic
 // @namespace       https://greasyfork.org/users/11629-TheLastTaterTot
-// @version         0.5.3
+// @version         2019.05.03.01
 // @description     Parses RSel-specific expression text and rebuilds it in the UI.
 // @author          TheLastTaterTot
 // @include         https://editor-beta.waze.com/*editor/*
@@ -13,7 +13,7 @@
 // Main usage: RSelExprParser.updateExpression(<rsel expression text>)
 
 var RSelExprParser = {
-    version: '0.5.3',
+    version: '2019.05.03.01',
     new__EXPR_DEBUGINFO: function(m, exprWord, exprPhrase) {
         return {
             m: m,
@@ -24,9 +24,12 @@ var RSelExprParser = {
             errorMsg: null
         };
     },
+    escapeRegExp(s) {
+        return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
+    },
     _getSelectionIndex: function(selector, selText) {
         for (var s = 0, sLength = selector.length; s < sLength; s++) {
-            if (new RegExp(selText,'i').test(selector[s].text) && !selector[s].disabled) {
+            if (new RegExp(RSelExprParser.escapeRegExp(selText),'i').test(selector[s].text) && !selector[s].disabled) {
                 return selector[s].value;
             }
         }
@@ -163,7 +166,7 @@ var RSelExprParser = {
                 document.getElementById('opRSRoadType').value = RSelExprParser._getSelectionIndex(document.getElementById('opRSRoadType').options, selText);
             },
             val: function(selText) {
-            	selText = '^' + selText + '$';
+            	selText = '^' + selText.replace("/", "\/") + '$';
                 document.getElementById('selRSRoadType').value = RSelExprParser._getSelectionIndex(document.getElementById('selRSRoadType').options, selText);
             },
             add: function() {
