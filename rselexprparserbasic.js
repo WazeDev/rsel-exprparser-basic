@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name            rsel-exprparser-basic
 // @namespace       https://greasyfork.org/users/11629-TheLastTaterTot
-// @version         2019.05.03.02
+// @version         2019.05.03.03
 // @description     Parses RSel-specific expression text and rebuilds it in the UI.
 // @author          TheLastTaterTot
 // @include         https://editor-beta.waze.com/*editor/*
@@ -13,7 +13,7 @@
 // Main usage: RSelExprParser.updateExpression(<rsel expression text>)
 
 var RSelExprParser = {
-    version: '2019.05.03.02',
+    version: '2019.05.03.03',
     new__EXPR_DEBUGINFO: function(m, exprWord, exprPhrase) {
         return {
             m: m,
@@ -25,7 +25,7 @@ var RSelExprParser = {
         };
     },
     escapeRegExp(s) {
-        return s.replace(/[.*+?^${}()|[\]\\\/]/g, '\\$&'); // $& means the whole matched string
+        return s.replace(/[.*+?{}()|[\]\\\/]/g, '\\$&'); // $& means the whole matched string
     },
     _getSelectionIndex: function(selector, selText) {
         for (var s = 0, sLength = selector.length; s < sLength; s++) {
