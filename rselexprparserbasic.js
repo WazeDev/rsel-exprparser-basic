@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name            rsel-exprparser-basic
 // @namespace       https://greasyfork.org/users/11629-TheLastTaterTot
-// @version         2019.05.03.03
+// @version         2024.03.08.01
 // @description     Parses RSel-specific expression text and rebuilds it in the UI.
-// @author          TheLastTaterTot
+// @author          TheLastTaterTot, jangliss, fuji2086
 // @include         https://editor-beta.waze.com/*editor/*
 // @include         https://www.waze.com/*editor/*
 // @exclude         https://www.waze.com/*user/editor/*
@@ -13,7 +13,7 @@
 // Main usage: RSelExprParser.updateExpression(<rsel expression text>)
 
 var RSelExprParser = {
-    version: '2019.05.03.03',
+    version: '2024.03.04.01',
     new__EXPR_DEBUGINFO: function(m, exprWord, exprPhrase) {
         return {
             m: m,
@@ -342,6 +342,30 @@ var RSelExprParser = {
                 document.getElementById('btnRSAddTunnel').click();
             }
         },
+        unpaved: {
+            op: function(checked) {
+                document.getElementById('cbRSUnpaved').checked = checked;
+            },
+            add: function() {
+                document.getElementById('btnRSAddUnpaved').click();
+            }
+        },
+		hov: {
+            op: function(checked) {
+                document.getElementById('cbRSHOV').checked = checked;
+            },
+            add: function() {
+                document.getElementById('btnRSAddHOV').click();
+            }
+        },
+		headlights: {
+            op: function(checked) {
+                document.getElementById('cbRSHeadlights').checked = checked;
+            },
+            add: function() {
+                document.getElementById('btnRSAddHeadlights').click();
+            }
+        },
         new: {
             op: function(checked) {
                 document.getElementById('cbRSIsNew').checked = checked;
@@ -465,7 +489,7 @@ var RSelExprParser = {
 
                 // Identify elements that contain selection condition names
                 if (
-                /^country|^state|^city|^street|^(?:un|street[\s-]?)?name|^road|^round|^toll|^speed|^dir|^elevation|^tun|^manlock|^traflock|^speed|^new|^changed|screen$|^restrict|^clos|^createdby|^last|^updatedby|^length|^id|^editable/i
+                /^country|^state|^city|^street|^(?:un|street[\s-]?)?name|^road|^round|^toll|^speed|^dir|^elevation|^tun|^unpaved|^carpool|^headlights|^manlock|^traflock|^speed|^new|^changed|screen$|^restrict|^clos|^createdby|^last|^updatedby|^length|^id|^editable/i
                 .test(exprFragment)) {
                     condMatches.push(exprFragment.toLowerCase());
                     // lists specific selection conditions
@@ -611,7 +635,7 @@ var RSelExprParser = {
 
             // BINARY CONDITIONS:
         case exprPhrase.length === 0 || //suggests binary
-        /^(screen|roundabout|toll|tun|new|changed|restrict|editable)/.test(exprBuild.cond) || //binary selection conditions
+        /^(screen|roundabout|toll|tun|unpaved|carpool|headlights|new|changed|restrict|editable)/.test(exprBuild.cond) || //binary selection conditions
         (/^name.*|^closure/i.test(exprBuild.cond) && exprPhrase.length <= 1):
             //selection conditions that have both binary and multiple options
 
@@ -658,11 +682,16 @@ var RSelExprParser = {
             case 'roundabout':
             case 'toll':
             case 'tunnel':
+            case 'unpaved':
+			case 'headlights':
             case 'new':
             case 'changed':
             case 'restriction':
             case 'editable':
                 return exprBuild;
+			case 'carpool/hov/bus':
+				exprBuild.cond = "hov";
+				return exprBuild;
             default:
                 exprBuild.errorCode = 101;
                 exprBuild.errorMsg = 'Error: Presumed binary selector had no match.';
@@ -761,7 +790,7 @@ var RSelExprParser = {
                 }
 
                 if (/^direction/.test(exprBuild.cond)) {
-                    exprBuild.val = exprBuild.val.match(/A[<>-\s]*B|B[<>-\s]*A|^"?one[\s-]?ways?"?$|unknown|\btwo/i)+''; //reduce to unique key words... last option will automatically input both one ways
+                    exprBuild.val = exprBuild.val.match(/A[<>‹›-\s]*B|B[<>‹›-\s]*A|^"?one[\s-]?ways?"?$|unknown|\btwo/i)+''; //reduce to unique key words... last option will automatically input both one ways
                     //reduce to unique key words...
                 }
             }
