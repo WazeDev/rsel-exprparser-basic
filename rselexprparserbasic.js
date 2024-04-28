@@ -258,7 +258,7 @@ var RSelExprParser = {
 			op: function(selText) {
 			},
 			val: function(val) {
-				document.getElementById('opRSRoutePrf').value = RSelExprParser._getSelectionIndex(document.getElementById('opRSRoutePrf').options, selText);
+				document.getElementById('opRSRoutePrf').value = RSelExprParser._getSelectionIndex(document.getElementById('opRSRoutePrf').options, val);
 			},
             add: function() {
                 document.getElementById('btnRSAddRoutePrf').click();
