@@ -255,6 +255,8 @@ var RSelExprParser = {
             }
         },
 		routingpreference: {
+			op: function(selText) {
+			},
 			val: function(val) {
 				document.getElementById('opRSRoutePrf').value = RSelExprParser._getSelectionIndex(document.getElementById('opRSRoutePrf').options, selText);
 			},
