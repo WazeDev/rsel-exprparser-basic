@@ -13,7 +13,7 @@
 // Main usage: RSelExprParser.updateExpression(<rsel expression text>)
 
 var RSelExprParser = {
-    version: '2024.03.04.01',
+    version: '2024.04.28.01',
     new__EXPR_DEBUGINFO: function(m, exprWord, exprPhrase) {
         return {
             m: m,
@@ -254,6 +254,14 @@ var RSelExprParser = {
                 document.getElementById('btnRSAddClsr').click();
             }
         },
+		routingpreference: {
+			val: function(val) {
+				document.getElementById('opRSRoutePrf').value = RSelExprParser._getSelectionIndex(document.getElementById('opRSRoutePrf').options, selText);
+			},
+            add: function() {
+                document.getElementById('btnRSAddRoutePrf').click();
+            }
+		},
         updatedby: {
             op: function(selText) {
             	selText = '^' + selText + '$';
@@ -460,6 +468,7 @@ var RSelExprParser = {
         parseThis = parseThis.replace(/\b((?:un)?name[ds]?)\b|\b(road) type\b|\b(last) update\b|\b(speed) limits?\b/ig, '$1$2$3$4')
         parseThis = parseThis.replace(/\b(man)ual (lock)s?\b|\b(traf)[fic]* (lock)s?\b/ig, '$1$2$3$4');
         parseThis = parseThis.replace(/\b(created|updated)\s(by)\b/ig, '$1$2');
+		parseThis = parseThis.replace(/\b(routing)\s(preference)\b/ig, '$1$2');
         parseThis = parseThis.replace(/\bon screen/ig, 'onscreen');
         //\b(?:in|on|off|out|outside)(?: of)?[- ]?screen\b
         parseThis = parseThis.replace(/\b(?:off|out)(?: of)?[- ]?screen/ig, 'offscreen');
@@ -489,7 +498,7 @@ var RSelExprParser = {
 
                 // Identify elements that contain selection condition names
                 if (
-                /^country|^state|^city|^street|^(?:un|street[\s-]?)?name|^road|^round|^toll|^speed|^dir|^elevation|^tun|^unpaved|^carpool|^headlights|^manlock|^traflock|^speed|^new|^changed|screen$|^restrict|^clos|^createdby|^last|^updatedby|^length|^id|^editable/i
+                /^country|^state|^city|^street|^(?:un|street[\s-]?)?name|^road|^round|^toll|^speed|^dir|^elevation|^tun|^unpaved|^carpool|^headlights|^manlock|^traflock|^speed|^new|^changed|screen$|^restrict|^clos|^createdby|^last|^updatedby|^length|^routingpreference|^id|^editable/i
                 .test(exprFragment)) {
                     condMatches.push(exprFragment.toLowerCase());
                     // lists specific selection conditions
